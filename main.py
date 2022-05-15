@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 
 if __name__ == "__main__":
     logging.info("Loading spacy model...")
-    en_model = spacy.load("en_core_web_md")
+    en_model = spacy.load("en_core_web_lg")
     logging.info("Loaded spacy model")
     
     logging.info("Loading dataset...")
