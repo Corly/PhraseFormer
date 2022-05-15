@@ -39,12 +39,9 @@ class Preprocessser:
     
     
     def add_bio_tags_to_text(self, text: str, keywords: List[str]) -> List[Tuple[str, str]]:
-        # print(text)
         doc = self.spacy_model(text)
-        # print(1)
         keywords_to_starts = {keyword: [] for keyword in keywords}
         keywords_to_spacy_keywords = {keyword: self.spacy_model(keyword) for keyword in keywords}
-        # print(2)
         for keyword in keywords:
             # print(keyword)
             forward = 0
@@ -53,7 +50,6 @@ class Preprocessser:
                 keywords_to_starts[keyword].append(start)
                 forward = start + len(keyword)
                 start = text.find(keyword, forward)
-        # print(3)
         
         for keyword, starts in keywords_to_starts.items():
             for start in starts:
@@ -64,7 +60,6 @@ class Preprocessser:
                                 word._.keyword_tag = "B"
                             else:
                                 doc[position + i]._.keyword_tag = "I"
-        # print(4)
         words_and_tags = []
         for word in doc:
             words_and_tags.append((word.text, word._.keyword_tag))

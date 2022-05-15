@@ -56,7 +56,7 @@ class Trainer:
                 keyed_embedding = np.zeros(128, dtype=np.float32)
             combined_word_embeddings.append(
                 np.concatenate([bert_word_embeddings[i], keyed_embedding]).tolist())
-        return combined_word_embeddings, [x[1] for x in word_tag_list]
+        return combined_word_embeddings, [self.label_to_class[x[1]] for x in word_tag_list]
     
     
     def build_crf_bilstm_model(self):
@@ -82,7 +82,7 @@ class Trainer:
     
     
     def get_cross_validation_splits(self, k_fold: int = 5) -> List[List[List[int]]]:
-        length = len(self.spacy_docs)
+        length = len(self.doc_words_tags)
         slices = []
         for i in range(1, k_fold + 1):
             test_slice_start = (i - 1) * (length // k_fold)
@@ -114,7 +114,7 @@ class Trainer:
             test_input = inputs[test_indices]
             test_output = outputs[test_indices]
             f1callback = F1Callback(test_input, test_output)
-            history = model.fit(train_input, train_output, epochs=100, validation_data=(test_input, test_output), batch_size=32, verbose=1, callbacks=[f1callback])
+            history = model.fit(train_input, train_output, epochs=42, validation_data=(test_input, test_output), batch_size=32, verbose=1, callbacks=[f1callback])
             # best_scores.append(max(history.history["val_accuracy_of_B_and_I"]))
         print(np.mean(best_scores))
 
